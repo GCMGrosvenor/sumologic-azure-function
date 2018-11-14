@@ -12,14 +12,6 @@
       "ProjectBranch": "feature"
     }
   },
-  "develop": {
-    "Pipelines": [
-      "pipelines.build.json"
-    ],
-    "Variables": {
-      "ProjectBranch": "develop"
-    }
-  },
   "release": {
     "Pipelines": [
       "pipelines.build.json"
@@ -36,19 +28,9 @@
       "ProjectBranch": "master"
     }
   },
-  "dev": {
+  "nonprd": {
     "Variables": {
       "ProjectBranch": "feature"
-    }
-  },
-  "qat": {
-    "Variables": {
-      "ProjectBranch": "develop"
-    }
-  },
-  "uat": {
-    "Variables": {
-      "ProjectBranch": "release"
     }
   },
   "prd": {
