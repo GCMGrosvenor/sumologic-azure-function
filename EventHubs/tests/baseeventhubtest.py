@@ -19,9 +19,9 @@ class BaseEventHubTest(BaseTest):
         self.resource_client = ResourceManagementClient(self.credentials,
                                                         self.subscription_id)
         try:
-            self.sumo_endpoint_url = os.environ["SumoEndpointURL"]
+            self.sumo_endpoint_url = os.environ["sumoEndpointURL"]
         except KeyError:
-            raise Exception("SumoEndpointURL environment variables are not set")
+            raise Exception("sumoEndpointURL environment variables are not set")
 
         self.repo_name, self.branch_name = self.get_git_info()
 
@@ -92,7 +92,7 @@ class BaseEventHubTest(BaseTest):
         with open(template_path, 'r') as template_file_fd:
             template_data = json.load(template_file_fd)
 
-        template_data["parameters"]["SumoEndpointURL"]["defaultValue"] = self.sumo_endpoint_url
+        template_data["parameters"]["sumoEndpointURL"]["defaultValue"] = self.sumo_endpoint_url
         template_data["parameters"]["sourceCodeBranch"]["defaultValue"] = self.branch_name
         template_data["parameters"]["sourceCodeRepositoryURL"]["defaultValue"] = self.repo_name
 

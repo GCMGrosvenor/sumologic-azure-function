@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "description": "This is an utility package for Sumo Logic Inc.",
   "license": "Apache",
-  "files": ["./lib"],
+  "files": [
+    "./lib"
+  ],
   "main": "./lib/mainindex",
   "devDependencies": {
     "chai": "*",
     "mocha": "*",
-    "https":"*",
-    "zlib":"*",
-    "url":"*"
+    "https": "*",
+    "zlib": "*",
+    "url": "*"
   }
 }

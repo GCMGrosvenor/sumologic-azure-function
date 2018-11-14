@@ -1,0 +1,59 @@
+{
+  "default": {
+    "Variables": {
+      "ProjectName": "SumoEventHub"
+    }
+  },
+  "feature": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "feature"
+    }
+  },
+  "develop": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "develop"
+    }
+  },
+  "release": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "release"
+    }
+  },
+  "master": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "master"
+    }
+  },
+  "dev": {
+    "Variables": {
+      "ProjectBranch": "feature"
+    }
+  },
+  "qat": {
+    "Variables": {
+      "ProjectBranch": "develop"
+    }
+  },
+  "uat": {
+    "Variables": {
+      "ProjectBranch": "release"
+    }
+  },
+  "prd": {
+    "Variables": {
+      "ProjectBranch": "release"
+    }
+  }
+}

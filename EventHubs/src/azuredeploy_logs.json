@@ -2,56 +2,44 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "sites_SumoAzureLogsFunctionApp_name": {
-            "defaultValue": "[concat('SumoAzureLogsFunctionApp', uniqueString(resourceGroup().id))]",
-            "type": "String"
+        "applicationName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "metadata": {
+                "description": "Name of the Logic App. Not used but added here because Gcm.AzureRM.Powershell provides this value no matter what."
+            }
         },
-        "storageAccounts_SumoAzureFailedMsg_name": {
-            "defaultValue": "[concat('sumofailmsg',uniqueString(resourceGroup().id))]",
-            "type": "String"
+        "lifecycle": {
+            "type": "string",
+            "metadata": {
+                "description": "The lifecycle suffix. Not used but added here because Gcm.AzureRM.Powershell provides this value no matter what."
+            }
         },
-        "namespaces_SumoAzureLogs_name": {
-            "defaultValue": "[concat('SumoAzureLogsNamespace', uniqueString(resourceGroup().id))]",
-            "type": "String"
+        "lifecycleSuffix": {
+            "type": "string",
+            "metadata": {
+                "description": "The lifecycle suffix. Not used but added here because Gcm.AzureRM.Powershell provides this value no matter what."
+            }
         },
-        "serverfarms_SumoAzureLogsAppServicePlan_name": {
-            "defaultValue": "[concat('SumoAzureLogsAppServicePlan', uniqueString(resourceGroup().id))]",
-            "type": "String"
-        },
-        "storageAccounts_SumoAzureAppLogs_name": {
-            "defaultValue": "[concat('sumoapplogs', uniqueString(resourceGroup().id))]",
-            "type": "String"
-        },
-        "eventhubs_insights_operational_logs_name": {
-            "defaultValue": "insights-operational-logs",
-            "type": "String"
-        },
-        "AuthorizationRules_RootManageSharedAccessKey_name": {
-            "defaultValue": "RootManageSharedAccessKey",
-            "type": "String"
-        },
-        "consumergroups_$Default_name": {
-            "defaultValue": "$Default",
-            "type": "String"
-        },
-        "sourceCodeRepositoryURL": {
-            "defaultValue":"https://github.com/SumoLogic/sumologic-azure-function",
-            "type": "String"
-        },
-        "sourceCodeBranch": {
-            "defaultValue":"master",
-            "type": "String"
-        },
-        "sourceCodeManualIntegration": {
-            "defaultValue": "true",
-            "type": "String"
-        },
-        "SumoEndpointURL": {
-            "defaultValue": "Enter HTTP Source URL",
-            "type": "String"
+        "sumoEndpointURL": {
+            "defaultValue": "Sumo Logic's HTTP Source URL",
+            "type": "string"
         }
     },
-    "variables": {},
+    "variables": {
+        "sitesSumoAzureLogsFunctionAppName": "[resourceGroup().name]",
+        "storageAccountsSumoAzureAppLogsName": "[toLower(concat('l', replace(replace(replace(resourceGroup().name, '-', ''), '_', ''), ' ', '')))]",
+        "storageAccountsSumoAzureFailedMsgName": "[toLower(concat('f', replace(replace(replace(resourceGroup().name, '-', ''), '_', ''), ' ', '')))]",
+        "namespacesSumoAzureLogsName": "[resourceGroup().name]",
+        "serverfarmsSumoAzureLogsAppServicePlanName": "[resourceGroup().name]",
+        "eventHubsInsightsOperationalLogsName": "insights-operational-logs",
+        "authorizationRulesRootManageSharedAccessKeyName": "RootManageSharedAccessKey",
+        "consumerGroupsDefaultName": "$Default",
+        "sourceCodeRepositoryURL": "https://github.com/GCMGrosvenor/sumologic-azure-function",
+        "sourceCodeBranch": "master",
+        "sourceCodeManualIntegration": "true"
+    },
     "resources": [
         {
             "type": "Microsoft.EventHub/namespaces",
@@ -60,7 +48,7 @@
                 "tier": "Standard",
                 "capacity": 1
             },
-            "name": "[parameters('namespaces_SumoAzureLogs_name')]",
+            "name": "[variables('namespacesSumoAzureLogsName')]",
             "apiVersion": "2017-04-01",
             "location": "[resourceGroup().location]",
             "tags": {},
@@ -69,10 +57,10 @@
                 "isAutoInflateEnabled": true,
                 "maximumThroughputUnits": 20,
                 "provisioningState": "Succeeded",
-                "metricId": "[concat('c088dc46-d692-42ad-a4b6-9a542d28ad2a:sumoazurelogs', parameters('namespaces_SumoAzureLogs_name'))]",
+                "metricId": "[concat('c088dc46-d692-42ad-a4b6-9a542d28ad2a:sumoazurelogs', variables('namespacesSumoAzureLogsName'))]",
                 "createdAt": "2018-01-17T09:33:37.26Z",
                 "updatedAt": "2018-01-17T09:34:00.52Z",
-                "serviceBusEndpoint": "[concat('https://', parameters('namespaces_SumoAzureLogs_name'),'.servicebus.windows.net:443/')]"
+                "serviceBusEndpoint": "[concat('https://', variables('namespacesSumoAzureLogsName'),'.servicebus.windows.net:443/')]"
             },
             "dependsOn": []
         },
@@ -83,7 +71,7 @@
                 "tier": "Standard"
             },
             "kind": "Storage",
-            "name": "[parameters('storageAccounts_SumoAzureFailedMsg_name')]",
+            "name": "[variables('storageAccountsSumoAzureFailedMsgName')]",
             "apiVersion": "2017-06-01",
             "location": "[resourceGroup().location]",
             "scale": null,
@@ -110,7 +98,7 @@
                 "tier": "Standard"
             },
             "kind": "Storage",
-            "name": "[parameters('storageAccounts_SumoAzureAppLogs_name')]",
+            "name": "[variables('storageAccountsSumoAzureAppLogsName')]",
             "apiVersion": "2017-06-01",
             "location": "[resourceGroup().location]",
             "scale": null,
@@ -139,12 +127,12 @@
                 "capacity": 0
             },
             "kind": "functionapp",
-            "name": "[parameters('serverfarms_SumoAzureLogsAppServicePlan_name')]",
+            "name": "[variables('serverfarmsSumoAzureLogsAppServicePlanName')]",
             "apiVersion": "2016-09-01",
             "location": "[resourceGroup().location]",
             "scale": null,
             "properties": {
-                "name": "[parameters('serverfarms_SumoAzureLogsAppServicePlan_name')]",
+                "name": "[variables('serverfarmsSumoAzureLogsAppServicePlanName')]",
                 "workerTierName": null,
                 "adminSiteName": null,
                 "hostingEnvironmentProfile": null,
@@ -158,51 +146,71 @@
         {
             "type": "Microsoft.Web/sites",
             "kind": "functionapp",
-            "name": "[parameters('sites_SumoAzureLogsFunctionApp_name')]",
+            "name": "[variables('sitesSumoAzureLogsFunctionAppName')]",
             "apiVersion": "2016-08-01",
             "location": "[resourceGroup().location]",
             "scale": null,
             "properties": {
                 "enabled": true,
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_SumoAzureLogsAppServicePlan_name'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarmsSumoAzureLogsAppServicePlanName'))]",
                 "reserved": false,
                 "siteConfig": {
                     "appSettings": [
-                        { "name": "FUNCTIONS_EXTENSION_VERSION", "value": "~1" },
-                        { "name": "Project", "value": "EventHubs/target/logs_build/" },
-                        {"name": "AzureWebJobsStorage", "value" : "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccounts_SumoAzureAppLogs_name'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_SumoAzureAppLogs_name')),'2015-05-01-preview').key1)]"},
-                        {"name": "AzureWebJobsDashboard", "value" : "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccounts_SumoAzureAppLogs_name'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_SumoAzureAppLogs_name')),'2015-05-01-preview').key1)]"},
-                        {"name": "SumoLogsEndpoint", "value" : "[parameters('SumoEndpointURL')]"},
-                        {"name": "AzureEventHubConnectionString", "value" : "[listkeys(resourceId('Microsoft.EventHub/namespaces/authorizationRules', parameters('namespaces_SumoAzureLogs_name'),parameters('AuthorizationRules_RootManageSharedAccessKey_name')), '2017-04-01').primaryConnectionString]"},
-                        {"name": "StorageConnectionString", "value" : "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccounts_SumoAzureFailedMsg_name'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_SumoAzureFailedMsg_name')),'2015-05-01-preview').key1,';EndpointSuffix=core.windows.net')]"}
-
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~1"
+                        },
+                        {
+                            "name": "Project",
+                            "value": "EventHubs/target/logs_build/"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "SumoLogsEndpoint",
+                            "value": "[parameters('sumoEndpointURL')]"
+                        },
+                        {
+                            "name": "AzureEventHubConnectionString",
+                            "value": "[listkeys(resourceId('Microsoft.EventHub/namespaces/authorizationRules', variables('namespacesSumoAzureLogsName'),variables('authorizationRulesRootManageSharedAccessKeyName')), '2017-04-01').primaryConnectionString]"
+                        },
+                        {
+                            "name": "StorageConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureFailedMsgName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureFailedMsgName')),'2015-05-01-preview').key1,';EndpointSuffix=core.windows.net')]"
+                        }
                     ]
                 }
             },
             "resources": [
-             {
-                  "apiVersion": "2015-08-01",
-                  "name": "web",
-                  "type": "sourcecontrols",
-                  "dependsOn": [
-                    "[resourceId('Microsoft.Web/sites/', parameters('sites_SumoAzureLogsFunctionApp_name'))]"
-                  ],
-                  "properties": {
-                    "RepoUrl": "[parameters('sourceCodeRepositoryURL')]",
-                    "branch": "[parameters('sourceCodeBranch')]",
-                    "IsManualIntegration": "[parameters('sourceCodeManualIntegration')]"
-                  }
-             }
+                {
+                    "apiVersion": "2015-08-01",
+                    "name": "web",
+                    "type": "sourcecontrols",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('sitesSumoAzureLogsFunctionAppName'))]"
+                    ],
+                    "properties": {
+                        "RepoUrl": "[variables('sourceCodeRepositoryURL')]",
+                        "branch": "[variables('sourceCodeBranch')]",
+                        "IsManualIntegration": "[variables('sourceCodeManualIntegration')]"
+                    }
+                }
             ],
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_SumoAzureLogsAppServicePlan_name'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_SumoAzureAppLogs_name'))]",
-                "[concat('Microsoft.EventHub/namespaces/', parameters('namespaces_SumoAzureLogs_name'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarmsSumoAzureLogsAppServicePlanName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName'))]",
+                "[concat('Microsoft.EventHub/namespaces/', variables('namespacesSumoAzureLogsName'))]"
             ]
         },
         {
             "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
-            "name": "[concat(parameters('namespaces_SumoAzureLogs_name'), '/', parameters('AuthorizationRules_RootManageSharedAccessKey_name'))]",
+            "name": "[concat(variables('namespacesSumoAzureLogsName'), '/', variables('authorizationRulesRootManageSharedAccessKeyName'))]",
             "apiVersion": "2017-04-01",
             "location": "[resourceGroup().location]",
             "scale": null,
@@ -214,12 +222,12 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_SumoAzureLogs_name'))]"
+                "[resourceId('Microsoft.EventHub/namespaces', variables('namespacesSumoAzureLogsName'))]"
             ]
         },
         {
             "type": "Microsoft.EventHub/namespaces/eventhubs",
-            "name": "[concat(parameters('namespaces_SumoAzureLogs_name'), '/', parameters('eventhubs_insights_operational_logs_name'))]",
+            "name": "[concat(variables('namespacesSumoAzureLogsName'), '/', variables('eventHubsInsightsOperationalLogsName'))]",
             "apiVersion": "2017-04-01",
             "location": "[resourceGroup().location]",
             "scale": null,
@@ -237,12 +245,12 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_SumoAzureLogs_name'))]"
+                "[resourceId('Microsoft.EventHub/namespaces', variables('namespacesSumoAzureLogsName'))]"
             ]
         },
         {
             "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
-            "name": "[concat(parameters('namespaces_SumoAzureLogs_name'), '/', parameters('eventhubs_insights_operational_logs_name'), '/', parameters('consumergroups_$Default_name'))]",
+            "name": "[concat(variables('namespacesSumoAzureLogsName'), '/', variables('eventHubsInsightsOperationalLogsName'), '/', variables('consumerGroupsDefaultName'))]",
             "apiVersion": "2017-04-01",
             "location": "[resourceGroup().location]",
             "scale": null,
@@ -251,8 +259,8 @@
                 "updatedAt": "2018-01-17T10:01:00.7812081"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_SumoAzureLogs_name'))]",
-                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_SumoAzureLogs_name'), parameters('eventhubs_insights_operational_logs_name'))]"
+                "[resourceId('Microsoft.EventHub/namespaces', variables('namespacesSumoAzureLogsName'))]",
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', variables('namespacesSumoAzureLogsName'), variables('eventHubsInsightsOperationalLogsName'))]"
             ]
         }
     ]
