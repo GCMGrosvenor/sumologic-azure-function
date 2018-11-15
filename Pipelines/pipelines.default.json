@@ -1,7 +1,8 @@
 {
   "default": {
     "Variables": {
-      "ProjectName": "SumoEventHub"
+      "ProjectName": "SumoEventHub",
+      "ProjectGitMaterialUrl": "https://${GitHubAccessToken}@github.com/GCMGrosvenor/sumologic-azure-function.git"
     }
   },
   "feature": {

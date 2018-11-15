@@ -1,39 +1,32 @@
-# Gcm.Samples.LogicApp
+# Sumo Logic Azure Event Hub Integration
+This solution creates a data pipeline for shipping monitoring data out of eventhub to Sumo Logic HTTP source endpoint.
 
-> Sample project to deploy an empty logic app using Gcm.AzureRM.PowerShell nuget package.
+## About the Configuration Process
+Sumo provides Azure Resource Management (ARM) templates to build the pipelines, one for logs, one for metrics. Each template creates an event hub to which Azure Monitor streams logs or metrics, an Azure function for sending monitoring data on to Sumo, and storage accounts to which the function writes its own log messages about successful and failed transmissions.
 
-## Setup for Gcm.Samples.LogicApp
+You download an ARM template, edit it to add the URL of your HTTP source, copy the template into Azure Portal, and deploy it. Then, you can start exporting monitoring data to EventHub.
 
-- Replace the content of the file AzureLogicApp.json with your Logic App code (extracted from Visual Studio or Azure Portal).
-- Add the default parameters: 
-  - applicationName: provided by default, using the value of the **Application** setting from [deploy.app.json](Config/deploy.app.json).
-  - lifecycle: provided by default, using the value of the **Lifecycle** setting from [deploy.app.json](Config/deploy.app.json).
-  - lifecycleSuffix: provided by default, using the value of the **LifecycleSuffix** setting, from [deploy.app.json](Config/deploy.app.json).
-- Clean up your ARM Template to avoid hardcoded values e.g. subscription key.
-- Fill in 'Config/deploy.app.json' and 'Config/deploy.variables.json' with your Logic App's configuration. Every parameter from the ARM Template that requires a value (besides the default parameters listed above) have to be added as **TemplateParameters** with an object notation, not as an array.
+This solution enables you to collect:
 
+* [Activity Logs](https://help.sumologic.com/Send-Data/Applications-and-Other-Data-Sources/Azure-Audit/02Collect-Logs-for-Azure-Audit-from-Event-Hub)
+* [Diagnostics Logs](https://help.sumologic.com/Send-Data/Collect-from-Other-Data-Sources/Azure_Monitoring/Collect_Logs_from_Azure_Monitor) and [Metrics](https://help.sumologic.com/Send-Data/Collect-from-Other-Data-Sources/Azure_Monitoring/Collect_Metrics_from_Azure_Monitor) which can be exported via Azure Monitor
 
-## Deploy Parameters
-> Bold parameters are required.
-- **TemplateName** (string): The name of the template without file extension to be used during deployment. Templates should be a json file in the root directory. By default it's named AzureLogicApp, so if you change the ARM Template file name, also change the **TemplateName** variable.
+![EventHub Collection Data Pipeline](https://s3.amazonaws.com/appdev-cloudformation-templates/AzureEventHubCollection.png)
 
-- **ApplicationPrefix** (string): Used as second part of the full application name. Possible values: pub, pvm, ent. If ent(enterprise), this will be null.
+## Building the function
+Currently ARM template is integrated with github and for each functions
+EventHubs/target/logs_build/EventHubs_Logs - Function for ingesting Activity Logs
+EventHubs/target/metrics_build/EventHubs_Metrics - Function for ingesting Metrics Data
 
-- **Application** (string): The name of the Logic App. This will provide a value to the **applicationName** default parameter from the ARM Template. Should not include dashes (-).
+## For Developers
+`npm run build`
+This command copies required files in two directories logs_build(used for activity logs ingestions) and metrics_build(used for metrics data(in diagnostic settings) ingestion)
 
-- **Lifecycle** (string): Environment to deploy. Possible values: dev, qat, uat, nonprd, prd.
+Integrations tests are in EventHubs/tests folder and unit tests are in sumo-function-utils/tests folder
 
-- LifecycleSuffix (string): Used to create multiple environments for a given Lifecycle.
+The project is deployed through Gcm.AzureRM.Powershell.
 
-- Version (string): The version of the project to deploy. If not entered will use build version.
+For now GCM uses only the [Event Hub ARM Template](azuredeploy_logs.json), because only logs are collected. 
 
-- **AuthOptions** (object): Defines the options used to authenticate with Azure.
-	- SubscriptionName (string): prd, non-prd, sandbox. If not entered, defaults to non-prd.
+The only required parameter is the Sumo Logic HTTP Collector Source Url, specified in the [Config files](Config/deploy.app.json)
 
-- **DeployOptions** (object): Options to be used during deployment.
-	- **DeploymentName**: The unique name to be used for this instance of the deployment. For example, if deploying databases to an elastic pool each database should have a unique deployment name, but should share the same ResourceGroup name.
-	- ResourceGroupName (string): The name of the resource group to deploy. If not provided will use Application + Lifecyle + LifecycleSuffix.
-  - Location (string): If null, defaults to East US.
-  - ResourceGroupLockLevel (string): Create a resource lock, options either 'CanNotDelete' or 'ReadOnly'
-
-- **TemplateParameters** (object): Parameters as required by the template being used. See [AzureRM.Templates](https://github.com/GCMGrosvenor/Gcm.AzureRM.Templates) for details.
