@@ -18,11 +18,7 @@ Currently ARM template is integrated with github and for each functions
 EventHubs/target/logs_build/EventHubs_Logs - Function for ingesting Activity Logs
 EventHubs/target/metrics_build/EventHubs_Metrics - Function for ingesting Metrics Data
 
-## For Developers
-`npm run build`
-This command copies required files in two directories logs_build(used for activity logs ingestions) and metrics_build(used for metrics data(in diagnostic settings) ingestion)
-
-Integrations tests are in EventHubs/tests folder and unit tests are in sumo-function-utils/tests folder
+## GCM
 
 The project is deployed through Gcm.AzureRM.Powershell.
 
