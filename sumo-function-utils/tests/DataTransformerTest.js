@@ -10,7 +10,6 @@ var mocha = require('mocha')
 var assert = chai.assert;
 chai.should();
 
-
 describe('DataTransformerTest',function () {
     var myTransformer = new transformer.Transformer();
     var testInput;
@@ -27,7 +26,7 @@ describe('DataTransformerTest',function () {
             }
             testInput.push({"records":tmp_buff});
         }
-    });
+    })
 
     it('it should unpack a single input blob properly',function() {
         expect(myTransformer.azureAudit(testInput[0]).length).to.equal(testMessageCount);
@@ -36,6 +35,5 @@ describe('DataTransformerTest',function () {
     it('it should unpack an array input blob properly',function() {
         expect(myTransformer.azureAudit(testInput).length).to.equal(testMessageCount*testBlobCount);
     });
-
 })
 

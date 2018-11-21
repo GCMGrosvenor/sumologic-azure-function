@@ -14,22 +14,44 @@ Transformer.prototype.azureAudit = function (data) {
 
     var finalResult = [];
     if (data instanceof Array) {
-        data.forEach( message => {
+        data.forEach(message => {
             if (message.records instanceof Array) {
                 message.records.forEach(subMsg => {
-                    finalResult.push(subMsg);
+                    finalResult.push(this.generateFormattedLog(subMsg));
                 });
             } else {
-                finalResult.push(message);
+                finalResult.push(this.generateFormattedLog(message));
             }
         });
     } else {
         if (data.records instanceof Array) {
-            data.records.forEach(subMsg => { finalResult.push(subMsg);});
-        } else { finalResult.push(data);}
+            data.records.forEach(subMsg => { finalResult.push(this.generateFormattedLog(subMsg)); });
+        } else { finalResult.push(this.generateFormattedLog(data)); }
     }
     return finalResult;
 };
+
+/**
+ * Function to generate a well formatted log to send to Sumo, following GCM's standards
+ * @param msg the original Azure log message
+ * @returns {object} of log following GCM's standard format
+ */
+Transformer.prototype.generateFormattedLog = function (msg) {
+    var log = {
+        level: msg.level,
+        host: msg.workflowId,
+        application: msg.properties.resource.workflowName,
+        environment: msg.properties.resource.resourceGroupName.split('-').slice(-1)[0],
+        process: msg.operationName,
+        message: msg.properties.resource.triggerName
+    };
+
+    if (msg.level.toLocaleLowerCase() == "error") {
+        log.exception = msg.properties.error.message;
+    }
+
+    return log;
+}
 
 /**
  * Function to generate metric objects from a single Azure metric object
@@ -38,11 +60,11 @@ Transformer.prototype.azureAudit = function (data) {
  * @returns {Array} of metric objects each contain these fields: 'metric','timestamp','statistic','value' and other keys the original Azure metric object, MINUS 'metricName','time', and 5 statistics.
  * These objects, however are not ready to be sent to the SumoMetricClient. They have to be formatted via formatMetricObject function before being forwarded to a SumoMetricClient
  */
-Transformer.prototype.generateRawMetricObjectsFromAzureRawMetricRecord = function(msg, selectStatsForMetricFn) {
+Transformer.prototype.generateRawMetricObjectsFromAzureRawMetricRecord = function (msg, selectStatsForMetricFn) {
     let finalMetricArray = [];
     let stat_method;
     // build core component
-    let core = Object.assign({},msg);
+    let core = Object.assign({}, msg);
     delete core.count;
     delete core.total;
     delete core.average;
@@ -50,15 +72,15 @@ Transformer.prototype.generateRawMetricObjectsFromAzureRawMetricRecord = functio
     delete core.minimum;
     delete core.metricName;
     delete core.time;
-    core['timestamp'] = Math.ceil((new Date(msg.time)).getTime()/1000); //need to convert to epoch seconds
+    core['timestamp'] = Math.ceil((new Date(msg.time)).getTime() / 1000); //need to convert to epoch seconds
     core['metric'] = msg['metricName'];
 
     for (stat_method of selectStatsForMetricFn(msg)) {
         if (msg && stat_method in msg) {
             // in case some metrics don't have this statistic
-            let newDatapoint = Object.assign({},core);
-            newDatapoint['statistic']=stat_method;
-            newDatapoint['value']=msg[stat_method];
+            let newDatapoint = Object.assign({}, core);
+            newDatapoint['statistic'] = stat_method;
+            newDatapoint['value'] = msg[stat_method];
             finalMetricArray.push(newDatapoint);
         }
     }
@@ -72,7 +94,7 @@ Transformer.prototype.generateRawMetricObjectsFromAzureRawMetricRecord = functio
  * @param format 'graphite' or 'carbon20'
  * @return A metric object that has a field 'metric_string' that will be sent to Sumo via a SumoMetricClient, along with any other metric and non-metric metadata
  */
-Transformer.prototype.prepareMetricObject = function(metricObject,format) {
+Transformer.prototype.prepareMetricObject = function (metricObject, format) {
     if (metricObject['metric_string']) return metricObject; // do nothing
 
     if (format.toLocaleLowerCase() == "graphite") {
@@ -142,12 +164,12 @@ Transformer.prototype.prepareMetricObject = function(metricObject,format) {
  * At maximum, 5 metrics (based on count, total, average, maximum,minimum values) can be generated from a single Azure original metric object.
  * @returns {Array} Array of final metric objects digestable by a SumoMetricClient. Each object will have a 'metric_string' field to be used by the client to send to Sumo
  */
-Transformer.prototype.generateMetricObjectsFromAzureRawData = function(azureMetricArray,selectStatsForMetricFn,format) {
+Transformer.prototype.generateMetricObjectsFromAzureRawData = function (azureMetricArray, selectStatsForMetricFn, format) {
     let finalMetricArray = [];
-    for (const msg of azureMetricArray)   {
-        let metricArray  = Transformer.prototype.generateRawMetricObjectsFromAzureRawMetricRecord(msg,selectStatsForMetricFn);
+    for (const msg of azureMetricArray) {
+        let metricArray = Transformer.prototype.generateRawMetricObjectsFromAzureRawMetricRecord(msg, selectStatsForMetricFn);
         for (let metricObj of metricArray) {
-            finalMetricArray.push(Transformer.prototype.prepareMetricObject(metricObj,format));
+            finalMetricArray.push(Transformer.prototype.prepareMetricObject(metricObj, format));
         }
     }
     return finalMetricArray;
@@ -155,5 +177,5 @@ Transformer.prototype.generateMetricObjectsFromAzureRawData = function(azureMetr
 
 
 module.exports = {
-    Transformer:Transformer
+    Transformer: Transformer
 };
