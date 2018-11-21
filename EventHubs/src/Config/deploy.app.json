@@ -1,0 +1,12 @@
+{
+  "TemplateName": "azuredeploy_logs",
+  "Lifecycle": "%Environment%",
+  "Application": "sumomonitoring",
+  "ApplicationPrefix": "ent",
+  "DeployOptions": {
+    "ResourceGroupName": "${ResourceGroupName}"
+  },
+  "TemplateParameters": {
+    "sumoEndpointURL": "https://endpoint1.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV2ThvnKIqN71qZlupioM2ZBUaLPVJ4vOHNh7_gtdRQGxZJHLGI4usfxDDGpOTj-JH2WblLMsXPfsMKwGS4xZXsKgZpOLbzAS6eC1dVYJguO-Q=="
+  }
+}

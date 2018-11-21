@@ -1,0 +1,42 @@
+{
+  "default": {
+    "Variables": {
+      "ProjectName": "SumoEventHub",
+      "ProjectGitMaterialUrl": "https://${GitHubAccessToken}@github.com/GCMGrosvenor/sumologic-azure-function.git"
+    }
+  },
+  "feature": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "feature"
+    }
+  },
+  "release": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "release"
+    }
+  },
+  "master": {
+    "Pipelines": [
+      "pipelines.build.json"
+    ],
+    "Variables": {
+      "ProjectBranch": "master"
+    }
+  },
+  "nonprd": {
+    "Variables": {
+      "ProjectBranch": "feature"
+    }
+  },
+  "prd": {
+    "Variables": {
+      "ProjectBranch": "release"
+    }
+  }
+}
