@@ -10,23 +10,23 @@
 function Transformer() {
 }
 
-Transformer.prototype.azureAudit = function (data) {
+Transformer.prototype.azureAudit = function (context, data) {
 
     var finalResult = [];
     if (data instanceof Array) {
         data.forEach(message => {
             if (message.records instanceof Array) {
                 message.records.forEach(subMsg => {
-                    finalResult.push(this.generateFormattedLog(subMsg));
+                    finalResult.push(this.generateFormattedLog(context, subMsg));
                 });
             } else {
-                finalResult.push(this.generateFormattedLog(message));
+                finalResult.push(this.generateFormattedLog(context, message));
             }
         });
     } else {
         if (data.records instanceof Array) {
-            data.records.forEach(subMsg => { finalResult.push(this.generateFormattedLog(subMsg)); });
-        } else { finalResult.push(this.generateFormattedLog(data)); }
+            data.records.forEach(subMsg => { finalResult.push(this.generateFormattedLog(context, subMsg)); });
+        } else { finalResult.push(this.generateFormattedLog(context, data)); }
     }
     return finalResult;
 };
@@ -36,21 +36,35 @@ Transformer.prototype.azureAudit = function (data) {
  * @param msg the original Azure log message
  * @returns {object} of log following GCM's standard format
  */
-Transformer.prototype.generateFormattedLog = function (msg) {
+Transformer.prototype.generateFormattedLog = function (context, msg) {
     var log = {
-        level: msg.level,
-        host: msg.workflowId,
-        application: msg.properties.resource.workflowName,
-        environment: msg.properties.resource.resourceGroupName.split('-').slice(-1)[0],
-        process: msg.operationName,
-        message: msg.properties.resource.triggerName
+        level: this.getValue(() => msg.level),
+        host: this.getValue(() => msg.workflowId),
+        application: this.getValue(() => msg.properties.resource.workflowName),
+        environment: this.getValue(() => msg.properties.resource.resourceGroupName.split('-').slice(-1)[0]),
+        status: this.getValue(() => msg.properties.status),
+        process: this.getValue(() => msg.operationName),
+        trigger: this.getValue(() => msg.properties.resource.triggerName),
+        action: this.getValue(() => msg.properties.resource.actionName),
+        message: this.getValue(() => msg.properties.resource.actionName.replace(/_/g, ' ')),
+        runId: this.getValue(() => msg.properties.resource.runId)
     };
 
-    if (msg.level.toLocaleLowerCase() == "error") {
-        log.exception = msg.properties.error.message;
+    if (msg && msg.level && msg.level.toLocaleLowerCase() == "error") {
+        log.errorCode = this.getValue(() => msg.properties.error.code);
+        log.exception = this.getValue(() => msg.properties.error.message);
     }
 
     return log;
+}
+
+Transformer.prototype.getValue = function (func, fallbackValue) {
+    try {
+        var value = func();
+        return (value === null || value === undefined) ? fallbackValue : value;
+    } catch (e) {
+        return fallbackValue;
+    }
 }
 
 /**
