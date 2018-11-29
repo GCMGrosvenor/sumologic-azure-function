@@ -32,7 +32,7 @@ Transformer.prototype.azureAudit = function (context, data) {
 Transformer.prototype.getProperties = function (resourceGroupName) {
     var defaultPrefixes = ['gcm', 'pvm', 'pub']
     var nameSegments = resourceGroupName.split('-');
-    var application, environment, lifeCycle, lifeCycleSuffix = '';
+    var application, environment, lifecycle, lifecycleSuffix;
     var applicationSegments = [];
 
     do {
@@ -42,20 +42,20 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
     while (defaultPrefixes.includes(nameSegment));
 
     application = applicationSegments.join('-');
-    lifeCycle = nameSegments.shift();
-    environment = lifeCycle;
+    lifecycle = nameSegments.shift();
+    environment = lifecycle;
 
     if (nameSegments.length > 0) {
-        lifeCycleSuffix = nameSegments.shift();
-        environment += '-' + lifeCycleSuffix;
+        lifecycleSuffix = nameSegments.shift();
+        environment += '-' + lifecycleSuffix;
     }
 
     var properties = {
         resourceGroupName: resourceGroupName,
         application: application,
         environment: environment,
-        lifeCycle: lifeCycle,
-        lifeCycleSuffix: lifeCycleSuffix
+        lifecycle: lifecycle,
+        lifecycleSuffix: lifecycleSuffix
     }
 
     return properties
@@ -78,8 +78,8 @@ Transformer.prototype.generateFormattedLog = function (context, msg) {
         resourceGroupName: properties.resourceGroupName,
         application: properties.application,
         environment: properties.environment,
-        lifeCycle: properties.lifeCycle,
-        lifeCycleSuffix: properties.lifeCycleSuffix,
+        lifecycle: properties.lifecycle,
+        lifecycleSuffix: properties.lifecycleSuffix,
         status: this.getValue(() => msg.properties.status),
         process: this.getValue(() => msg.operationName),
         trigger: this.getValue(() => msg.properties.resource.triggerName),
