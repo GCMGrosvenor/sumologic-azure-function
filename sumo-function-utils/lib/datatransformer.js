@@ -7,11 +7,9 @@
  * Class containing default data transformer
  * @constructor
  */
-function Transformer() {
-}
+function Transformer() { }
 
 Transformer.prototype.azureAudit = function (context, data) {
-
     var finalResult = [];
     if (data instanceof Array) {
         data.forEach(message => {
@@ -31,23 +29,68 @@ Transformer.prototype.azureAudit = function (context, data) {
     return finalResult;
 };
 
+Transformer.prototype.getProperties = function (resourceGroupName) {
+    var defaultPrefixes = ['gcm', 'pvm', 'pub']
+    var nameSegments = resourceGroupName.split('-');
+    var application, environment, lifeCycle, lifeCycleSuffix = '';
+    var applicationSegments = [];
+
+    do {
+        nameSegment = nameSegments.shift();
+        applicationSegments.push(nameSegment);
+    }
+    while (defaultPrefixes.includes(nameSegment));
+
+    application = applicationSegments.join('-');
+    lifeCycle = nameSegments.shift();
+    environment = lifeCycle;
+
+    if (nameSegments.length > 0) {
+        lifeCycleSuffix = nameSegments.shift();
+        environment += '-' + lifeCycleSuffix;
+    }
+
+    var properties = {
+        resourceGroupName: resourceGroupName,
+        application: application,
+        environment: environment,
+        lifeCycle: lifeCycle,
+        lifeCycleSuffix: lifeCycleSuffix
+    }
+
+    return properties
+}
+
 /**
  * Function to generate a well formatted log to send to Sumo, following GCM's standards
  * @param msg the original Azure log message
  * @returns {object} of log following GCM's standard format
  */
 Transformer.prototype.generateFormattedLog = function (context, msg) {
+    var properties = this.getProperties(this.getValue(() => msg.properties.resource.resourceGroupName, ''));
+
     var log = {
         level: this.getValue(() => msg.level),
         host: this.getValue(() => msg.workflowId),
-        application: this.getValue(() => msg.properties.resource.workflowName),
-        environment: this.getValue(() => msg.properties.resource.resourceGroupName.split('-').slice(-1)[0]),
+        workflowId: this.getValue(() => msg.workflowId),
+        resourceId: this.getValue(() => msg.resourceId),
+        category: this.getValue(() => msg.category),
+        resourceGroupName: properties.resourceGroupName,
+        application: properties.application,
+        environment: properties.environment,
+        lifeCycle: properties.lifeCycle,
+        lifeCycleSuffix: properties.lifeCycleSuffix,
         status: this.getValue(() => msg.properties.status),
         process: this.getValue(() => msg.operationName),
         trigger: this.getValue(() => msg.properties.resource.triggerName),
         action: this.getValue(() => msg.properties.resource.actionName),
         message: this.getValue(() => msg.properties.resource.actionName.replace(/_/g, ' ')),
-        runId: this.getValue(() => msg.properties.resource.runId)
+        runId: this.getValue(() => msg.properties.resource.runId),
+        location: this.getValue(() => msg.properties.resource.location),
+        category: this.getValue(() => msg.category),
+        code: this.getValue(() => msg.properties.code),
+        correlationActionTrackingId: this.getValue(() => msg.properties.correlation.actionTrackingId),
+        correlationClientTrackingId: this.getValue(() => msg.properties.correlation.clientTrackingId)
     };
 
     if (msg && msg.level && msg.level.toLocaleLowerCase() == "error") {
