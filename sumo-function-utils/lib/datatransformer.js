@@ -87,7 +87,6 @@ Transformer.prototype.generateFormattedLog = function (context, msg) {
         message: this.getValue(() => msg.properties.resource.actionName.replace(/_/g, ' ')),
         runId: this.getValue(() => msg.properties.resource.runId),
         location: this.getValue(() => msg.properties.resource.location),
-        category: this.getValue(() => msg.category),
         code: this.getValue(() => msg.properties.code),
         correlationActionTrackingId: this.getValue(() => msg.properties.correlation.actionTrackingId),
         correlationClientTrackingId: this.getValue(() => msg.properties.correlation.clientTrackingId)
