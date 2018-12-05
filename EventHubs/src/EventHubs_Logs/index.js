@@ -2,8 +2,8 @@
 //           Function to read from an Azure EventHubs to SumoLogic               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-var sumoHttp = require('./lib/sumoclient');
-var dataTransformer = require('./lib/datatransformer');
+var sumoHttp = require('../lib/sumoclient');
+var dataTransformer = require('../lib/datatransformer');
 var sumoClient;
 
 
