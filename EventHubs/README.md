@@ -2,7 +2,7 @@
 This solution creates a data pipeline for shipping monitoring data out of eventhub to Sumo Logic HTTP source endpoint.
 
 ## About the Configuration Process
-Sumo provides Azure Resource Management (ARM) templates to build the pipelines, one for logs, one for metrics. Each template creates an event hub to which Azure Monitor streams logs or metrics, an Azure function for sending monitoring data on to Sumo, and storage accounts to which the function writes its own log messages about successful and failed transmissions.
+Sumo provides Azure Resource Management (ARM) template to build the pipelines. Each template creates an event hub to which Azure Monitor streams logs, an Azure function for sending monitoring data on to Sumo, and storage accounts to which the function writes its own log messages about successful and failed transmissions.
 
 You download an ARM template, edit it to add the URL of your HTTP source, copy the template into Azure Portal, and deploy it. Then, you can start exporting monitoring data to EventHub.
 
@@ -15,12 +15,13 @@ This solution enables you to collect:
 
 ## Building the function
 Currently ARM template is integrated with github and for each functions
-EventHubs/target/logs_build/EventHubs_Logs - Function for ingesting Activity Logs
-EventHubs/target/metrics_build/EventHubs_Metrics - Function for ingesting Metrics Data
+EventHubs/src/logs_build/EventHubs_Logs - Function for ingesting Activity Logs
 
-## For Developers
-`npm run build`
-This command copies required files in two directories logs_build(used for activity logs ingestions) and metrics_build(used for metrics data(in diagnostic settings) ingestion)
+## GCM
 
-Integrations tests are in EventHubs/tests folder and unit tests are in sumo-function-utils/tests folder
+The project is deployed through Gcm.AzureRM.Powershell.
+
+For now GCM uses only the [Event Hub ARM Template](azuredeploy_logs.json), because only logs are collected. 
+
+The only required parameter is the Sumo Logic HTTP Collector Source Url, specified in the [Config files](Config/deploy.app.json)
 
