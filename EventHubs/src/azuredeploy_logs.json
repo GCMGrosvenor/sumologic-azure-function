@@ -37,7 +37,7 @@
         "authorizationRulesRootManageSharedAccessKeyName": "RootManageSharedAccessKey",
         "consumerGroupsDefaultName": "$Default",
         "sourceCodeRepositoryURL": "https://github.com/GCMGrosvenor/sumologic-azure-function",
-        "sourceCodeBranch": "feature/deploy",
+        "sourceCodeBranch": "feature/change-deployment-structure",
         "sourceCodeManualIntegration": "true"
     },
     "resources": [
