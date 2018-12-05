@@ -15,5 +15,4 @@ Following integrations are present. For more info look at their respective ReadM
 ## For Developers
 Each integration is structured in three folders
 * src/     - contains actual source files
-* target/  - directory used by azure's github integration to fetch source code
 * tests/   - contains integration tests
