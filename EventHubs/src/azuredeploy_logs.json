@@ -162,7 +162,7 @@
                         },
                         {
                             "name": "Project",
-                            "value": "EventHubs/target/logs_build/"
+                            "value": "EventHubs/src/"
                         },
                         {
                             "name": "AzureWebJobsStorage",

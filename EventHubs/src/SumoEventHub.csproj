@@ -12,9 +12,6 @@
     <None Update="azuredeploy_logs.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="azuredeploy_metrics.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Config\deploy.app.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
