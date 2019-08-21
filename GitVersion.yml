@@ -7,11 +7,11 @@ mode: ContinuousDeployment
 branches:
   master:
     mode: ContinuousDelivery
-  dev(elop)?(ment)?$:
+  develop:
     increment: Patch
     track-merge-target: false
     tag: alpha
-  releases?[/-]:
+  release:
     prevent-increment-of-merged-branch-version: false
 ignore:
   sha: []
