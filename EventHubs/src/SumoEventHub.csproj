@@ -3,9 +3,10 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <PublishOutputPathContents>true</PublishOutputPathContents>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Gcm.AzureRM.PowerShell.Deployment" Version="1.3.13" />
+    <PackageReference Include="Gcm.AzureRM.PowerShell.Deployment" Version="1.*" />
     <PackageReference Include="Gcm.ConfigurationLoader" Version="3.0.0-netstandard0039" />
   </ItemGroup>
   <ItemGroup>
