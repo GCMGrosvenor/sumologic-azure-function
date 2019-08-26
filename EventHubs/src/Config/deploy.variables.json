@@ -1,6 +1,6 @@
 {
   "default": {
-    "ResourceGroupName": "gcm-sumolog-nonprd",
+    "ResourceGroupName": "gcm-sumomonitoring-nonprd",
     "AppInsightsInstrumentationKey": "892f8766-6c6a-40cd-b435-ea2ebedeea32"
   },
   "prd": {
