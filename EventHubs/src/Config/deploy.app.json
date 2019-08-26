@@ -7,6 +7,7 @@
     "ResourceGroupName": "${ResourceGroupName}"
   },
   "TemplateParameters": {
-    "sumoEndpointURL": "https://endpoint1.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV2Zk25a-FOxeLG75iDkP4zB-8R0aC0yeltZ1gsH9EhLyPd8pQ5lAq1wo9lHbCTXmQFuWgZ3dX3It7Q-pW5iozpt4inG8DSiTXVzl9liYzcV9A=="
+    "sumoEndpointURL": "https://endpoint1.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV2Zk25a-FOxeLG75iDkP4zB-8R0aC0yeltZ1gsH9EhLyPd8pQ5lAq1wo9lHbCTXmQFuWgZ3dX3It7Q-pW5iozpt4inG8DSiTXVzl9liYzcV9A==",
+    "AppInsightsInstrumentationKey": "${AppInsightsInstrumentationKey}"
   }
 }
