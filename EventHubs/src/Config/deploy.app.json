@@ -1,7 +1,7 @@
 {
   "TemplateName": "azuredeploy_logs",
   "Lifecycle": "%Environment%",
-  "Application": "sumomonitoring",
+  "Application": "sumolog",
   "ApplicationPrefix": "ent",
   "DeployOptions": {
     "ResourceGroupName": "${ResourceGroupName}"
