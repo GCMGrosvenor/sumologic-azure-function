@@ -1,0 +1,20 @@
+{
+    "Release": {
+        "Environments": [
+            {
+                "Name": "nonprd",
+                "AutoTrigger": false,
+                "VariableGroups": [
+                    "Deploy.Nonprd.Default"
+                ]
+            },
+            {
+                "Name": "prd",
+                "AutoTrigger": false,
+                "VariableGroups": [
+                    "Deploy.Prd.Default"
+                ]
+            }
+        ]
+    }
+}
