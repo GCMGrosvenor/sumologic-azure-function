@@ -1,4 +1,4 @@
-Sumo Logic Azure Functions [![Build Status](https://dev.azure.com/GCMGrosvenor/Default/_apis/build/status/sumologic-azure-function?branchName=master)](https://dev.azure.com/gcmgrosvenor/Default/_build?definitionId=227)
+Sumo Logic Azure Functions [![Build Status](https://travis-ci.org/SumoLogic/sumologic-azure-function.svg?branch=master)](https://travis-ci.org/SumoLogic/sumologic-azure-function)
 ==============================
 
 # Introduction
@@ -16,9 +16,3 @@ Following integrations are present. For more info look at their respective ReadM
 Each integration is structured in three folders
 * src/     - contains actual source files
 * tests/   - contains integration tests
-
-## Build Pipeline
-- [Azure DevOps](https://dev.azure.com/gcmgrosvenor/Default/_build?definitionId=227)
- 
-## Deploy Pipeline
-- [Azure DevOps](https://dev.azure.com/gcmgrosvenor/Default/_release?definitionId=223)
