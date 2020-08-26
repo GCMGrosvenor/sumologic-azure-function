@@ -1,0 +1,9 @@
+<Project>
+    <PropertyGroup>
+        <!-- Some projects in this repository are showing warnings during the Sonar analysis;
+            In order to migrate this application to Azure DevOps Pipelines, we're using this tag to disable these warnings during build process;
+            These warnings may be fixed or not in the future (by the team which developed this application) as a separated task;
+        -->
+        <UseReSharperAnalyzer>false</UseReSharperAnalyzer>
+    </PropertyGroup>
+</Project>

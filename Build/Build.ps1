@@ -1,5 +1,5 @@
 [CmdletBinding(PositionalBinding = $false)]
-param($Sdk = "Gcm.MSBuild.Sdk", $SdkVersion = "0.*", $SdkInstallArgs, $DotNetSdkVersion, [Alias('u')]$UpdateSdk = $true, [Alias('c')]$Configuration = 'Release', [Alias('o')]$Output = "$PSScriptRoot/../artifacts", [Alias('v')]$Verbosity = 'n', [Parameter(ValueFromRemainingArguments)][array]$CommandArgs)
+param($Sdk = "Gcm.MSBuild.Sdk", $SdkVersion = "1.*", $SdkInstallArgs, $DotNetSdkVersion, [Alias('u')]$UpdateSdk = $true, [Alias('c')]$Configuration = 'Release', [Alias('o')]$Output = "$PSScriptRoot/../artifacts", [Alias('v')]$Verbosity = 'n', [Parameter(ValueFromRemainingArguments)][array]$CommandArgs)
 $ErrorActionPreference = 'Stop'
 function exec { & $args[0] ($args | Select -Skip 1 |% { $_ }); if ($LASTEXITCODE -ne 0) { throw "Error executing $($args |% { $_ })`nExited with code $LASTEXITCODE" } } # Wrapper for execute command that flattens args and checks return code
 Push-Location $PSScriptRoot/..
@@ -27,8 +27,10 @@ try {
     if (Test-Path $Output) { rd $Output -r -Force } # Need -force in removing output as if the folder contains symlinks they will cause a prompt
     md $Output -Force | Out-Null # remove and recreate artifacts dir for build output
     exec dotnet clean -c $Configuration /p:PackageOutputPath=$Output -v $Verbosity $CommandArgs
-    # Pack before Build is set intentionally to ensure packages are placed in the artifacts folder when building from build.ps1 and in the bin folder when building from Visual Studio (See target UsePerProjectPackageOutputPath)
-    exec dotnet msbuild /r '/t:Pack;Build' /v:$Verbosity /p:Configuration=$Configuration /p:PackageOutputPath=$Output $CommandArgs
+    # Pack before Build was originally set intentionally to ensure packages are placed in the artifacts folder when building from build.ps1 and in the bin folder when building from Visual Studio.
+    # This has been remediated with a different solution with version 1.4 (using property UsePerProjectPackageOutputPath set here), 
+    # however the order was kept Pack before Build as some projects have targets that depend on this order. The order is being set to Build before pack as the next major release
+    exec dotnet msbuild /r '/t:Pack;Build' /v:$Verbosity /p:Configuration=$Configuration /p:PackageOutputPath=$Output /p:UsePerProjectPackageOutputPath=true $CommandArgs
     ([IO.Path]::GetFileNameWithoutExtension($PSCommandPath)) |% { if (Test-Path $PSScriptRoot/$_.after.ps1) { . "$PSScriptRoot/$_.after.ps1" } } # allow decorating after
   }
 } finally { Pop-Location }
