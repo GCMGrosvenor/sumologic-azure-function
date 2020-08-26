@@ -1,0 +1,8 @@
+{
+  "default": {
+    "EnvironmentName": "cfn-deploy-nonprod"
+  },
+  "prd": {
+    "EnvironmentName": "cfn-deploy-prod"
+  }
+}
