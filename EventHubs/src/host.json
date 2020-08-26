@@ -6,7 +6,7 @@
       "Gcm": "Information"
     }
   },
-  "functions": [ "EventHubs_Logs"],
+  "functions": [ "EventHubs_Logs" ],
   "extensions": {
     "eventHubs": {
       "batchCheckpointFrequency": 1,

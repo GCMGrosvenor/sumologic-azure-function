@@ -22,6 +22,9 @@
     <None Update="Deploy.parameters.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="host.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="package.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
