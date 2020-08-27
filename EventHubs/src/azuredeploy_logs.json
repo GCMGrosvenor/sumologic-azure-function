@@ -41,7 +41,7 @@
     "authorizationRulesRootManageSharedAccessKeyName": "RootManageSharedAccessKey",
     "consumerGroupsDefaultName": "$Default",
     "sourceCodeRepositoryURL": "https://github.com/GCMGrosvenor/sumologic-azure-function",
-    "sourceCodeBranch": "master",
+    "sourceCodeBranch": "feature/v3",
     "sourceCodeManualIntegration": "true"
   },
   "resources": [
@@ -173,6 +173,14 @@
               "value": "~12"
             },
             {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').keys[0].value)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[toLower(variables('sitesSumoAzureLogsFunctionAppName'))]"
+            },
+            {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
               "value": "[parameters('AppInsightsInstrumentationKey')]"
             },
@@ -182,11 +190,11 @@
             },
             {
               "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').key1)]"
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').keys[0].value)]"
             },
             {
               "name": "AzureWebJobsDashboard",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').key1)]"
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureAppLogsName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureAppLogsName')),'2015-05-01-preview').keys[0].value)]"
             },
             {
               "name": "SumoLogsEndpoint",
@@ -198,7 +206,7 @@
             },
             {
               "name": "StorageConnectionString",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureFailedMsgName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureFailedMsgName')),'2015-05-01-preview').key1,';EndpointSuffix=core.windows.net')]"
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureFailedMsgName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureFailedMsgName')),'2015-05-01-preview').keys[0].value,';EndpointSuffix=core.windows.net')]"
             }
           ]
         }
