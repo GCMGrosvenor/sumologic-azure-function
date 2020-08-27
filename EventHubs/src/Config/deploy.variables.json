@@ -1,6 +1,6 @@
 {
   "default": {
-    "ResourceGroupName": "gcm-sumomonitoring-nonprd"
+    "ResourceGroupName": "gcm-sumomonitoring-dev"
   },
   "prd": {
     "ResourceGroupName": "gcm-sumomonitoring-prd"
