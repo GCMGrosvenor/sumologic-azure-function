@@ -165,6 +165,18 @@
               "value": "~3"
             },
             {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "node"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "~12"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[parameters('AppInsightsInstrumentationKey')]"
+            },
+            {
               "name": "Project",
               "value": "EventHubs/src/"
             },
@@ -187,10 +199,6 @@
             {
               "name": "StorageConnectionString",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureFailedMsgName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureFailedMsgName')),'2015-05-01-preview').key1,';EndpointSuffix=core.windows.net')]"
-            },
-            {
-              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[parameters('AppInsightsInstrumentationKey')]"
             }
           ]
         }

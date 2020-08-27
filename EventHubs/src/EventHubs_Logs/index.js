@@ -6,7 +6,6 @@ var sumoHttp = require('./lib/sumoclient');
 var dataTransformer = require('./lib/datatransformer');
 var sumoClient;
 
-
 module.exports = function (context, eventHubMessages) {
     var options = { 'urlString': process.env.APPSETTING_SumoLogsEndpoint, 'metadata': {}, 'MaxAttempts': 3, 'RetryInterval': 3000, 'compress_data': true };
 
@@ -34,6 +33,4 @@ module.exports = function (context, eventHubMessages) {
     }
     context.log("Flushing the rest of the buffers:");
     sumoClient.flushAll();
-
 };
-

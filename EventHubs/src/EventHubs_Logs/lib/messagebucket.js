@@ -43,5 +43,3 @@ MessageBucket.prototype.add = function(elm) {
 module.exports = {
     MessageBucket:MessageBucket
 };
-
-
