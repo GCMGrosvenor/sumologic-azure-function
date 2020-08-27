@@ -1,17 +1,2 @@
-# Version increment mode
-# - GitVersion default mode for all branches but develop is ContinuousDelivery.
-#   + In ContinuousDelivery, each checkin is a release candidate, so semver stays static (save for BuildMetadata field - e.g. the 3 in 1.2.0-feature1.0+3) and semver increments only after a release is tagged (see https://gitversion.readthedocs.io/en/latest/reference/continuous-delivery/)
-#   + In ContinuousDeployment, because each checkin passing tests is deployed, the semver is incremented with each commit (e.g. the 3 in 1.2.0-feature1.3) (see https://gitversion.readthedocs.io/en/latest/reference/continuous-deployment/)
-# - We want to tag each checkin that passes tests with , we have to keep the mode ContinuousDeployment, or else any checkin after a tag will get incremented
-mode: ContinuousDeployment
-branches:
-  master:
-    mode: ContinuousDelivery
-  dev(elop)?(ment)?$:
-    increment: Patch
-    track-merge-target: false
-    tag: alpha
-  releases?[/-]:
-    prevent-increment-of-merged-branch-version: false
-ignore:
-  sha: []
+# Support GitHubFlow by default
+mode: Mainline
