@@ -1,0 +1,8 @@
+{
+    "sdk":  {
+                "version":  "3.1.101"
+            },
+    "msbuild-sdks":  {
+                         "Gcm.MSBuild.Sdk":  "1.6.0"
+                     }
+}
