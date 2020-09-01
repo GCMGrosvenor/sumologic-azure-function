@@ -9,9 +9,11 @@
   "functions": [ "EventHubs_Logs" ],
   "extensions": {
     "eventHubs": {
-      "maxBatchSize": 64,
-      "prefetchCount": 256,
-      "batchCheckpointFrequency": 1
+      "batchCheckpointFrequency": 1,
+      "eventProcessorOptions": {
+        "maxBatchSize": 64,
+        "prefetchCount": 256
+      } 
     }
   }
 }
