@@ -3,6 +3,7 @@
 pr: none
 # do not build tags
 trigger:
+  batch: true
   branches:
     include:
     - refs/*
