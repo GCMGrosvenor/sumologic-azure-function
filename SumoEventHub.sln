@@ -1,21 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SumoEventHub", "EventHubs\src\SumoEventHub.csproj", "{0DF9A03A-9697-44CE-8799-BB05AE7D1CA4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Build", "_Build", "{1F0B20AF-D6EE-443F-B26A-165AAFAA0B89}"
 	ProjectSection(SolutionItems) = preProject
-		Build\Build.ps1 = Build\Build.ps1
-		Build\Gcm.Build.properties.ps1 = Build\Gcm.Build.properties.ps1
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Pipelines", "_Pipelines", "{ABCB3B5F-BAF3-44F6-8FA0-7C6507FBB3F6}"
-	ProjectSection(SolutionItems) = preProject
-		Pipelines\pipelines.build.json = Pipelines\pipelines.build.json
-		Pipelines\pipelines.default.json = Pipelines\pipelines.default.json
-		Pipelines\pipelines.deploy.json = Pipelines\pipelines.deploy.json
+		Build\build.ps1 = Build\build.ps1
+		Build\build.targets = Build\build.targets
+		Build\test.ps1 = Build\test.ps1
 	EndProjectSection
 EndProject
 Global
