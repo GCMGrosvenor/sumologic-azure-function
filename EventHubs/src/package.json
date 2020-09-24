@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Azure function for reading data from EventHub and then forward it to Sumo collector HTTP endpoint.",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "@azure/arm-resources": "^4.0.0",
+    "@azure/ms-rest-nodeauth": "^3.0.5"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "",
