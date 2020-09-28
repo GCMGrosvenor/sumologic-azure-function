@@ -5,9 +5,8 @@
 var sumoHttp = require('./lib/sumoclient');
 var dataTransformer = require('./lib/datatransformer');
 var sumoClient;
-var resourceGroupModules = {};   // map of resource group name -> module name
 var subscriptionId = process.env.AZURE_SUBSCRIPTION_ID;
-var moduleDataTransformer = require('./lib/moduledatatransformer.js')(resourceGroupModules, subscriptionId);
+var moduleDataTransformer = require('./lib/moduledatatransformer.js')(subscriptionId);
 
 module.exports = async function (context, eventHubMessages) {
     await new Promise(async function (fulfill, reject){
@@ -17,12 +16,14 @@ module.exports = async function (context, eventHubMessages) {
         sumoClient = new sumoHttp.SumoClient(options, context, failureHandler, successHandler);
         var transformer = new dataTransformer.Transformer();
         var messageArray = transformer.azureAudit(context, eventHubMessages);
-        await Promise.all(messageArray.map(async (msg) => {
+        
+        // Process messages sequentially, so as to reduce chance for throttling and take advantage of caching
+        for (const msg of messageArray) {
             if (msg) {
                 var transformed = await moduleDataTransformer.transform(msg);
                 sumoClient.addData(transformed);
             }
-        }));
+        }
 
         function failureHandler(msgArray, ctx) {
             ctx.log("Failed to send to Sumo, backup to storageaccount now");
