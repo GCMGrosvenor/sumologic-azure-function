@@ -154,6 +154,9 @@
       "apiVersion": "2016-08-01",
       "location": "[resourceGroup().location]",
       "scale": null,
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "enabled": true,
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarmsSumoAzureLogsAppServicePlanName'))]",
