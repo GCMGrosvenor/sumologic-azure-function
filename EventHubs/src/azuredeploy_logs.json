@@ -41,7 +41,7 @@
     "authorizationRulesRootManageSharedAccessKeyName": "RootManageSharedAccessKey",
     "consumerGroupsDefaultName": "$Default",
     "sourceCodeRepositoryURL": "https://github.com/GCMGrosvenor/sumologic-azure-function",
-    "sourceCodeBranch": "feature/v3",
+    "sourceCodeBranch": "feature/addmodule",
     "sourceCodeManualIntegration": "true"
   },
   "resources": [
@@ -154,6 +154,9 @@
       "apiVersion": "2016-08-01",
       "location": "[resourceGroup().location]",
       "scale": null,
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "enabled": true,
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarmsSumoAzureLogsAppServicePlanName'))]",
@@ -207,6 +210,10 @@
             {
               "name": "StorageConnectionString",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountsSumoAzureFailedMsgName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountsSumoAzureFailedMsgName')),'2015-05-01-preview').key1,';EndpointSuffix=core.windows.net')]"
+            },
+            {
+              "name": "AZURE_SUBSCRIPTION_ID",
+              "value": "[subscription().subscriptionId]"
             }
           ]
         }

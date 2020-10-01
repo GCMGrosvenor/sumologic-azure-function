@@ -12,6 +12,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Build", "_Build", "{1F0B20
 		Build\test.ps1 = Build\test.ps1
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{27EEC373-6249-4296-A7E1-130AA1F68390}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit-tests", "unit-tests", "{DC17B45E-6F61-47CA-82C9-BF9E223D6F2F}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "unit-tests", "EventHubs\test\unit-tests\unit-tests.njsproj", "{A45F48CF-0B5A-4876-9D26-EB40AC0016CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,9 +28,17 @@ Global
 		{0DF9A03A-9697-44CE-8799-BB05AE7D1CA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DF9A03A-9697-44CE-8799-BB05AE7D1CA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DF9A03A-9697-44CE-8799-BB05AE7D1CA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A45F48CF-0B5A-4876-9D26-EB40AC0016CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A45F48CF-0B5A-4876-9D26-EB40AC0016CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A45F48CF-0B5A-4876-9D26-EB40AC0016CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A45F48CF-0B5A-4876-9D26-EB40AC0016CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DC17B45E-6F61-47CA-82C9-BF9E223D6F2F} = {27EEC373-6249-4296-A7E1-130AA1F68390}
+		{A45F48CF-0B5A-4876-9D26-EB40AC0016CA} = {DC17B45E-6F61-47CA-82C9-BF9E223D6F2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FBFB1025-4A25-402B-864F-A983D81372DC}
