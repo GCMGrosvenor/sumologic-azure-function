@@ -67,30 +67,56 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
  * @returns {object} of log following GCM's standard format
  */
 Transformer.prototype.generateFormattedLog = function (context, msg) {
-    var properties = this.getProperties(this.getValue(() => msg.properties.resource.resourceGroupName, ''));
+    // Logs from Azure Function follow different format than logs from Logic App
+    if(msg.category == 'FunctionAppLogs') {
+        // There is no resource group field in the message, but does RG name is included with resource id
+        var properties = this.getProperties(this.getValue(() => msg.resourceId.split('/')[4], ''));
 
-    var log = {
-        level: this.getValue(() => msg.level),
-        host: this.getValue(() => msg.workflowId),
-        workflowId: this.getValue(() => msg.workflowId),
-        resourceId: this.getValue(() => msg.resourceId),
-        category: this.getValue(() => msg.category),
-        resourceGroupName: properties.resourceGroupName,
-        application: properties.application,
-        environment: properties.environment,
-        lifecycle: properties.lifecycle,
-        lifecycleSuffix: properties.lifecycleSuffix,
-        status: this.getValue(() => msg.properties.status),
-        process: this.getValue(() => msg.operationName),
-        trigger: this.getValue(() => msg.properties.resource.triggerName),
-        action: this.getValue(() => msg.properties.resource.actionName),
-        message: this.getValue(() => msg.properties.resource.actionName.replace(/_/g, ' ')),
-        runId: this.getValue(() => msg.properties.resource.runId),
-        location: this.getValue(() => msg.properties.resource.location),
-        code: this.getValue(() => msg.properties.code),
-        correlationActionTrackingId: this.getValue(() => msg.properties.correlation.actionTrackingId),
-        correlationClientTrackingId: this.getValue(() => msg.properties.correlation.clientTrackingId)
-    };
+        var log = {
+            level: this.getValue(() => msg.level),
+            host: this.getValue(() => msg.propertes.hostInstanceId),
+            resourceId: this.getValue(() => msg.resourceId),
+            category: this.getValue(() => msg.category),
+            resourceGroupName: properties.resourceGroupName,
+            application: msg.appName,
+            environment: properties.environment,
+            lifecycle: properties.lifecycle,
+            lifecycleSuffix: properties.lifecycleSuffix,
+            status: this.getValue(() => msg.properties.status),
+            process: this.getValue(() => msg.operationName),
+            action: this.getValue(() => msg.properties.functionName),
+            message: this.getValue(() => msg.properties.message),
+            runId: this.getValue(() => msg.properties.functionInvocationId),
+            location: this.getValue(() => msg.location),
+            levelId: this.getValue(() => msg.levelId),
+        };
+    }
+    else {
+        var properties = this.getProperties(this.getValue(() => msg.properties.resource.resourceGroupName, ''));
+
+        var log = {
+            level: this.getValue(() => msg.level),
+            host: this.getValue(() => msg.workflowId),
+            workflowId: this.getValue(() => msg.workflowId),
+            resourceId: this.getValue(() => msg.resourceId),
+            category: this.getValue(() => msg.category),
+            resourceGroupName: properties.resourceGroupName,
+            application: properties.application,
+            environment: properties.environment,
+            lifecycle: properties.lifecycle,
+            lifecycleSuffix: properties.lifecycleSuffix,
+            status: this.getValue(() => msg.properties.status),
+            process: this.getValue(() => msg.operationName),
+            trigger: this.getValue(() => msg.properties.resource.triggerName),
+            action: this.getValue(() => msg.properties.resource.actionName),
+            message: this.getValue(() => msg.properties.resource.actionName.replace(/_/g, ' ')),
+            runId: this.getValue(() => msg.properties.resource.runId),
+            location: this.getValue(() => msg.properties.resource.location),
+            code: this.getValue(() => msg.properties.code),
+            correlationActionTrackingId: this.getValue(() => msg.properties.correlation.actionTrackingId),
+            correlationClientTrackingId: this.getValue(() => msg.properties.correlation.clientTrackingId)
+        };
+    }
 
     if (msg && msg.level && msg.level.toLocaleLowerCase() == "error") {
         log.errorCode = this.getValue(() => msg.properties.error.code);
