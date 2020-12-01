@@ -30,7 +30,7 @@ Transformer.prototype.azureAudit = function (context, data) {
 };
 
 Transformer.prototype.getProperties = function (resourceGroupName) {
-    var defaultPrefixes = ['gcm', 'pvm', 'pub']
+    var defaultPrefixes = ['GCM', 'pvm', 'pub']
     var nameSegments = resourceGroupName.split('-');
     var application, environment, lifecycle, lifecycleSuffix;
     var applicationSegments = [];
@@ -39,7 +39,7 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
         nameSegment = nameSegments.shift();
         applicationSegments.push(nameSegment);
     }
-    while (defaultPrefixes.includes(nameSegment.toLowerCase()));
+    while (defaultPrefixes.includes(nameSegment));
 
     application = applicationSegments.join('-');
     lifecycle = nameSegments.shift();
@@ -78,7 +78,7 @@ Transformer.prototype.generateFormattedLog = function (context, msg) {
             resourceId: this.getValue(() => msg.resourceId),
             category: this.getValue(() => msg.category),
             resourceGroupName: properties.resourceGroupName,
-            application: msg.appName,
+            application: properties.application,
             environment: properties.environment,
             lifecycle: properties.lifecycle,
             lifecycleSuffix: properties.lifecycleSuffix,
