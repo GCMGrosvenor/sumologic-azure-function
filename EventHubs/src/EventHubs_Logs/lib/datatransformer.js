@@ -70,7 +70,7 @@ Transformer.prototype.generateFormattedLog = function (context, msg) {
     // Logs from Azure Function follow different format than logs from Logic App
     if(msg.category == 'FunctionAppLogs') {
         // There is no resource group field in the message, but does RG name is included with resource id
-        var properties = this.getProperties(this.getValue(() => msg.resourceId.toLowerCase().split('/')[4], ''));
+        var properties = this.getProperties(this.getValue(() => msg.resourceId.split('/')[4], ''));
 
         var log = {
             level: this.getValue(() => msg.level),
