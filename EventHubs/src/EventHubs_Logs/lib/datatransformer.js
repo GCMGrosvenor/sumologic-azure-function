@@ -39,7 +39,7 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
         nameSegment = nameSegments.shift();
         applicationSegments.push(nameSegment);
     }
-    while (defaultPrefixes.includes(nameSegment));
+    while (defaultPrefixes.includes(nameSegment.toLowerCase()));
 
     application = applicationSegments.join('-');
     lifecycle = nameSegments.shift();
