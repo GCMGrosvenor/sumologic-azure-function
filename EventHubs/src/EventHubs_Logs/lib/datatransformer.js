@@ -31,7 +31,7 @@ Transformer.prototype.azureAudit = function (context, data) {
 
 Transformer.prototype.getProperties = function (resourceGroupName) {
     var defaultPrefixes = ['gcm', 'pvm', 'pub']
-    var nameSegments = resourceGroupName.toLocaleLowerCase().split('-');
+    var nameSegments = resourceGroupName.split('-');
     var application, environment, lifecycle, lifecycleSuffix;
     var applicationSegments = [];
 
