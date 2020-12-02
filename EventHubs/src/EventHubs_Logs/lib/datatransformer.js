@@ -67,7 +67,8 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
 Transformer.prototype.generateFormattedLog = function (context, msg) {
     // Logs from Azure Function follow different format than logs from Logic App
     if(msg.category == 'FunctionAppLogs') {
-        // There is no resource group field in the message, but does RG name is included with resource id
+        // There is no resource group field in the message, but RG name is included with resource id, an example resource id is:
+        // /SUBSCRIPTIONS/F3DB6719-1614-46A3-B0AD-38C5776134DC/RESOURCEGROUPS/GCM-WVDHOSTSCALING-NONPRD/PROVIDERS/MICROSOFT.WEB/SITES/GCM-WVDHOSTSCALING-NONPRD
         var properties = this.getProperties(this.getValue(() => msg.resourceId.split('/')[4], ''));
 
         var log = {
@@ -86,7 +87,7 @@ Transformer.prototype.generateFormattedLog = function (context, msg) {
             message: this.getValue(() => msg.properties.message),
             runId: this.getValue(() => msg.properties.functionInvocationId),
             location: this.getValue(() => msg.location),
-            levelId: this.getValue(() => msg.levelId),
+            levelId: this.getValue(() => msg.levelId)
         };
     }
     else {
