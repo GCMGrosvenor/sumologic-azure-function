@@ -33,15 +33,13 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
     var defaultPrefixes = ['gcm', 'pvm', 'pub']
     var nameSegments = resourceGroupName.toLowerCase().split('-');
     var application, environment, lifecycle, lifecycleSuffix;
-    var applicationSegments = [];
 
     do {
         nameSegment = nameSegments.shift();
-        applicationSegments.push(nameSegment);
     }
     while (defaultPrefixes.includes(nameSegment));
 
-    application = applicationSegments.join('-');
+    application = nameSegment;
     lifecycle = nameSegments.shift();
     environment = lifecycle;
 
@@ -51,7 +49,7 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
     }
 
     var properties = {
-        resourceGroupName: resourceGroupName,
+        resourceGroupName: resourceGroupName.toLowerCase(),
         application: application,
         environment: environment,
         lifecycle: lifecycle,
