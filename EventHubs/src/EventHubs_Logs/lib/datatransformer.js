@@ -65,7 +65,7 @@ Transformer.prototype.getProperties = function (resourceGroupName) {
  * @returns {object} of log following GCM's standard format
  */
 Transformer.prototype.generateFormattedLog = function (context, msg) {
-    // Logs from Azure Function follow different format than logs from Logic App
+    // Logs from 'Azure Function > Diagnostic Settings > Log > FunctionAppLogs' have a different structure than logs from Logic App
     if(msg.category == 'FunctionAppLogs') {
         // There is no resource group field in the message, but RG name is included with resource id, an example resource id is:
         // /SUBSCRIPTIONS/F3DB6719-1614-46A3-B0AD-38C5776134DC/RESOURCEGROUPS/GCM-WVDHOSTSCALING-NONPRD/PROVIDERS/MICROSOFT.WEB/SITES/GCM-WVDHOSTSCALING-NONPRD
